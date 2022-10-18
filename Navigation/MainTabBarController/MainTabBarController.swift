@@ -5,7 +5,7 @@ class MainTabBarController: UITabBarController {
     // MARK: -- Properties
 
     var feedTabNavigationController: UINavigationController!
-    var profileTabNavigationController: UINavigationController!
+    var loginTabNavigationController: UINavigationController!
 
     // MARK: -- Life cycle
 
@@ -19,14 +19,14 @@ class MainTabBarController: UITabBarController {
 
     private func setupView() {
         feedTabNavigationController = UINavigationController(rootViewController: FeedViewController())
-        profileTabNavigationController = UINavigationController(rootViewController: ProfileViewController())
+        loginTabNavigationController = UINavigationController(rootViewController: LogInViewController())
 
-        viewControllers = [feedTabNavigationController, profileTabNavigationController]
+        viewControllers = [feedTabNavigationController, loginTabNavigationController]
 
         let feedTabBarItem = UITabBarItem(title: "Feed", image: UIImage(systemName: "doc"), tag: 0)
-        let profileTabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person"), tag: 1)
+        let loginTabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person"), tag: 1)
 
         feedTabNavigationController.tabBarItem = feedTabBarItem
-        profileTabNavigationController.tabBarItem = profileTabBarItem
+        loginTabNavigationController.tabBarItem = loginTabBarItem
     }
 }
