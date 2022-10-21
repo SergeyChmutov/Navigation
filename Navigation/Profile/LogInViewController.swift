@@ -114,13 +114,13 @@ class LogInViewController: UIViewController {
         super.viewWillAppear(animated)
 
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(self.didShowKeyboard(_:)),
+                                               selector: #selector(didShowKeyboard(_:)),
                                                name: UIResponder.keyboardWillShowNotification,
                                                object: nil
         )
 
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(self.didHideKeyboard(_:)),
+                                               selector: #selector(didHideKeyboard(_:)),
                                                name: UIResponder.keyboardWillHideNotification,
                                                object: nil
         )
@@ -128,70 +128,56 @@ class LogInViewController: UIViewController {
 
     // MARK: -- Private Methods
 
-    private func scrollViewConstraints() -> [NSLayoutConstraint] {
-        let topAnchor = self.scrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor)
-        let leadingAnchor = self.scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor)
-        let trailingAnchor = self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
-        let bottomAnchor = self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
-
-        return [topAnchor, leadingAnchor, trailingAnchor, bottomAnchor]
-    }
-
-    private func stackViewConstraints() -> [NSLayoutConstraint] {
-        let topAnchor = self.stackView.topAnchor.constraint(equalTo: self.logoImageView.bottomAnchor, constant: Constants.LoginViewMargins.topStackView)
-        let leadingConstraint = self.stackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: Constants.LoginViewMargins.leadingMargin)
-        let trailingConstraint = self.stackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -Constants.LoginViewMargins.trailingMargin)
+    private func setupConstraints() {
 
         let stackViewHeight = Constants.LoginViewMargins.loginTextFieldsHeight +
         Constants.LoginViewMargins.buttonHeight +
         Constants.LoginViewMargins.buttonTopMargin
 
-        let heightConstraints = self.stackView.heightAnchor.constraint(equalToConstant: stackViewHeight)
+        NSLayoutConstraint.activate([
 
-        return [topAnchor, leadingConstraint, trailingConstraint, heightConstraints]
-    }
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
-    private func logoImageViewConstraints() -> [NSLayoutConstraint] {
-        let centerXAnchor = self.logoImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
-        let topAnchor = self.logoImageView.topAnchor.constraint(equalTo: self.scrollView.topAnchor, constant: Constants.LoginViewMargins.topLogo)
-        let widthConstraints = self.logoImageView.widthAnchor.constraint(equalToConstant: Constants.LoginViewMargins.logoWidth)
-        let heightConstraints = self.logoImageView.heightAnchor.constraint(equalToConstant: Constants.LoginViewMargins.logoHeight)
+            stackView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: Constants.LoginViewMargins.topStackView),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.LoginViewMargins.leadingMargin),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.LoginViewMargins.trailingMargin),
+            stackView.heightAnchor.constraint(equalToConstant: stackViewHeight),
 
-        return [centerXAnchor, topAnchor, widthConstraints, heightConstraints]
+            logoImageView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            logoImageView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: Constants.LoginViewMargins.topLogo),
+            logoImageView.widthAnchor.constraint(equalToConstant: Constants.LoginViewMargins.logoWidth),
+            logoImageView.heightAnchor.constraint(equalToConstant: Constants.LoginViewMargins.logoHeight),
+
+        ])
     }
 
     private func setupView() {
-        self.view.backgroundColor = .white
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
+        view.backgroundColor = .white
+        navigationController?.setNavigationBarHidden(true, animated: true)
 
-        self.setupGestures()
+        setupGestures()
 
-        self.view.addSubview(self.scrollView)
+        view.addSubview(scrollView)
 
-        self.scrollView.addSubview(self.logoImageView)
+        scrollView.addSubview(logoImageView)
 
-        self.stackView.addArrangedSubview(self.loginAccountTextField)
-        self.stackView.addArrangedSubview(self.loginPasswordTextField)
-        self.stackView.addArrangedSubview(self.loginButton)
+        stackView.addArrangedSubview(loginAccountTextField)
+        stackView.addArrangedSubview(loginPasswordTextField)
+        stackView.addArrangedSubview(loginButton)
 
-        self.stackView.setCustomSpacing(Constants.LoginViewMargins.buttonTopMargin, after: loginPasswordTextField)
+        stackView.setCustomSpacing(Constants.LoginViewMargins.buttonTopMargin, after: loginPasswordTextField)
 
-        self.scrollView.addSubview(self.stackView)
+        scrollView.addSubview(stackView)
 
-        let scrollViewConstraints = self.scrollViewConstraints()
-        let logoImageViewConstraints = self.logoImageViewConstraints()
-        let stackViewConstraints = self.stackViewConstraints()
-
-        NSLayoutConstraint.activate(
-            scrollViewConstraints +
-            logoImageViewConstraints +
-            stackViewConstraints
-        )
+        setupConstraints()
     }
 
     private func setupGestures() {
-        let tapViewGesture = UITapGestureRecognizer(target: self, action: #selector(self.forcedHidingKeyboard))
-        self.view.addGestureRecognizer(tapViewGesture)
+        let tapViewGesture = UITapGestureRecognizer(target: self, action: #selector(forcedHidingKeyboard))
+        view.addGestureRecognizer(tapViewGesture)
     }
 
     // MARK: -- Events Handler Methods
@@ -203,26 +189,26 @@ class LogInViewController: UIViewController {
             let keyboardRectangle = keyboardFrame.cgRectValue
             let keyboardHeight = keyboardRectangle.height
 
-            let loginButtonBottomPointY = self.stackView.frame.origin.y + self.stackView.frame.height
+            let loginButtonBottomPointY = stackView.frame.origin.y + stackView.frame.height
 
             // Учесть разницу view и safe area
-            let keyboardOriginY = self.view.frame.height - self.view.safeAreaLayoutGuide.layoutFrame.origin.y - keyboardHeight
+            let keyboardOriginY = view.frame.height - view.safeAreaLayoutGuide.layoutFrame.origin.y - keyboardHeight
 
             let offsetY = keyboardOriginY < loginButtonBottomPointY ? loginButtonBottomPointY - keyboardOriginY + Constants.LoginViewMargins.buttonBottomMargin : 0
 
-            self.scrollView.contentOffset = CGPoint(x: 0, y: offsetY)
+            scrollView.contentOffset = CGPoint(x: 0, y: offsetY)
         }
     }
 
     @objc
     private func didHideKeyboard(_ notification: Notification) {
-        self.forcedHidingKeyboard()
+        forcedHidingKeyboard()
     }
 
     @objc
     private func forcedHidingKeyboard() {
-        self.view.endEditing(true)
-        self.scrollView.setContentOffset(.zero, animated: true)
+        view.endEditing(true)
+        scrollView.setContentOffset(.zero, animated: true)
     }
 
     @objc
@@ -240,16 +226,16 @@ extension LogInViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         switch textField.tag {
         case 0:
-            self.loginAccount = textField.text
+            loginAccount = textField.text
         case 1:
-            self.loginPassword = textField.text
+            loginPassword = textField.text
         default:
             break
         }
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.forcedHidingKeyboard()
+        forcedHidingKeyboard()
         return true
     }
 }
