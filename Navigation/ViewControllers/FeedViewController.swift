@@ -4,7 +4,7 @@ class FeedViewController: UIViewController {
 
     // MARK: -- Properties
 
-    let firstPost = Post(title: "First post")
+    let firstPostTitle = "First post"
 
     private lazy var postViewButton: UIButton = {
         let button = UIButton()
@@ -45,7 +45,7 @@ class FeedViewController: UIViewController {
     @objc
     private func showPostViewController() {
         let postViewController = PostViewController()
-        postViewController.setupPostData(data: firstPost)
+        postViewController.setupPostData(title: firstPostTitle)
         navigationController?.pushViewController(postViewController, animated: true)
     }
 }
