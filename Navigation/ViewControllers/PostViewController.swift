@@ -2,7 +2,7 @@ import UIKit
 
 class PostViewController: UIViewController {
 
-    var postData: Post!
+    var postTitle: String!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -13,7 +13,7 @@ class PostViewController: UIViewController {
     // MARK: -- Methods
 
     private func setupView() {
-        title = postData.title
+        title = postTitle
         view.backgroundColor = .white
 
         setupBarButtonItem()
@@ -36,7 +36,7 @@ class PostViewController: UIViewController {
         present(infoViewController, animated: true, completion: nil)
     }
 
-    func setupPostData(data: Post) {
-        self.postData = data
+    func setupPostData(title: String) {
+        self.postTitle = title
     }
 }
