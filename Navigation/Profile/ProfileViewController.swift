@@ -8,6 +8,7 @@ class ProfileViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
 
         tableView.rowHeight = UITableView.automaticDimension
+        tableView.allowsSelection = false
 
         tableView.register(ProfileHeaderView.self, forHeaderFooterViewReuseIdentifier: "HederView")
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "TableViewCell")
